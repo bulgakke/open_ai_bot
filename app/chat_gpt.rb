@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ChatGPT
   module ClassMethods
     def threads
@@ -16,19 +18,20 @@ module ChatGPT
   end
 
   CHAT_GPT_WHITELIST = [
-    -1001710466788, # Akaia General
-    -1001705942869, # Akaia Engineering
-    -895036447, # Akaia Art
-    -1001568245078, # Neurostuff
-    -1001248912877, # Cyberbar
-    -1001207589473, # olexander's something psychology
-    -1001531033112, # Gyumri
-    -992131988 # Asgard
-  ]
+    -1_001_710_466_788, # Akaia General
+    -1_001_705_942_869, # Akaia Engineering
+    -895_036_447, # Akaia Art
+    -1_001_568_245_078, # Neurostuff
+    -1_001_248_912_877, # Cyberbar
+    -1_001_207_589_473, # olexander's something psychology
+    -1_001_531_033_112, # Gyumri
+    -992_131_988 # Asgard
+  ].freeze
 
   def init_session
     self.class.new_thread(@chat.id)
-    @api.send_message(text: "Bot's context reset.\n\n#{donate_message}", chat_id: @chat.id, parse_mode: "Markdown")
+    @api.send_message(text: "Bot's context reset.\n\n#{donate_message}", chat_id: @chat.id,
+                      parse_mode: "Markdown")
   end
 
   def fuck_off_human
@@ -49,7 +52,7 @@ module ChatGPT
   end
 
   def handle_gpt_command
-    command = @text_without_bot_mentions.strip
+    @text_without_bot_mentions.strip
     return if self.class.registered_commands.keys.any? { @text.match? Regexp.new(_1) }
     return unless bot_mentioned? || bot_replied_to? || private_chat?
 
@@ -60,7 +63,7 @@ module ChatGPT
     return if fuck_off_human
 
     text = @text_without_bot_mentions
-    text = nil if text.gsub(/\s/, '').empty?
+    text = nil if text.gsub(/\s/, "").empty?
 
     target_text = @replies_to&.text || @replies_to&.caption
     target_text = nil if @target&.username == config.bot_username
@@ -79,7 +82,6 @@ module ChatGPT
     end
   end
 
-
   def send_request(thread)
     Async do |task|
       request = Async do
@@ -87,7 +89,7 @@ module ChatGPT
           response = open_ai.chat(
             parameters: {
               model: "gpt-3.5-turbo",
-              messages: thread.history,
+              messages: thread.history
             }
           )
 
@@ -95,8 +97,8 @@ module ChatGPT
 
           if response["error"]
             error_text = response["error"]["message"]
-            error_text += "\n\nHint: press /start to reset the context." if error_text.match? "tokens"
-            raise Net::ReadTimeout.new(response["error"]["message"])
+            "#{error_text}\n\nHint: press /start to reset the context." if error_text.match? "tokens"
+            raise Net::ReadTimeout, response["error"]["message"]
           else
             text = response.dig("choices", 0, "message", "content")
 
@@ -119,7 +121,7 @@ module ChatGPT
     end
   end
 
-  def ask_gpt(name, prompt, thread)
+  def ask_gpt(_name, prompt, thread)
     thread.add!(:user, prompt)
 
     send_request(thread)

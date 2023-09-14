@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 module Utils
-  def attempt(times, exception = StandardError)
+  def attempt(times, _exception=StandardError)
     retries ||= 0
     yield
-  rescue => exception
+  rescue StandardError => e
     retries += 1
     if retries < times
       retry
     else
-      reply_code(exception.message)
+      reply_code(e.message)
     end
   end
 

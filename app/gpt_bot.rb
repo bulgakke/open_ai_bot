@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GPTBot < Rubydium::Bot
   include ChatGPT
   include Dalle
@@ -19,13 +21,11 @@ class GPTBot < Rubydium::Bot
   end
 
   def rust
-    if @msg.text&.match? /\brust!?\b/i
-      if rand < 0.4
-        send_chat_action(:upload_video)
-        video = Faraday::UploadIO.new("#{__dir__}/storage/rust.mp4", "mp4")
-        send_video(video)
-      end
-    end
+    return unless @msg.text&.match?(/\brust!?\b/i) && (rand < 0.4)
+
+    send_chat_action(:upload_video)
+    video = Faraday::UploadIO.new("#{__dir__}/storage/rust.mp4", "mp4")
+    send_video(video)
   end
 
   private

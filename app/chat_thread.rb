@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 class ChatThread
-  def initialize(chat)
+  def initialize(_chat)
     @history = [
       {
         role: :system,
-        content: default_instruction,
+        content: default_instruction
       },
       {
         role: :user,
-        content: first_user_message,
+        content: first_user_message
       },
       {
         role: :assistant,
@@ -16,16 +18,14 @@ class ChatThread
     ]
   end
 
-  def history
-    @history
-  end
+  attr_reader :history
 
   def add!(role, content)
-    return if [role, content].any? { _1 == nil || _1 == '' }
+    return if [role, content].any? { [nil, ""].include?(_1) }
 
     @history.push({
-      role:, content: content.gsub(/\\xD\d/, '')
-    })
+                    role: role, content: content.gsub(/\\xD\d/, "")
+                  })
   end
 
   def first_bot_message

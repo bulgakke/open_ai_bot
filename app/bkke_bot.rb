@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BkkeBot < GPTBot
   include Insults
 
@@ -11,19 +13,20 @@ class BkkeBot < GPTBot
   def twit
     text = @replies_to&.text
     return unless text
+
     re = /[^a-zа-я0-9\s]/
-    text = text.downcase.gsub('ё', 'е').gsub(re, ' ').gsub(/\s/, ' ').squeeze(' ')
+    text = text.downcase.gsub("ё", "е").gsub(re, " ").gsub(/\s/, " ").squeeze(" ")
 
     tweet_size = @text_without_command.to_i
     tweet_size = 140 if tweet_size.zero?
-    tweet_size = 10000 if tweet_size >= 10000
+    tweet_size = 10_000 if tweet_size >= 10_000
     tweet_size -= 8
 
     tweets = []
     n = 0
     while n <= (text.size / tweet_size)
-      s = 0 + n * tweet_size
-      e = tweet_size * (n + 1) - 1
+      s = 0 + (n * tweet_size)
+      e = (tweet_size * (n + 1)) - 1
       tweet = text[s..e]
       tweets << tweet
       n += 1
@@ -31,7 +34,7 @@ class BkkeBot < GPTBot
 
     total = tweets.size
     tweets.map!.with_index do |t, i|
-      "(#{i+1}/#{total}) " + t
+      "(#{i + 1}/#{total}) " + t
     end
 
     tweets.each do |t|
@@ -45,7 +48,7 @@ class BkkeBot < GPTBot
     return reply("Reply to an image") unless image
 
     file = jpg_to_webp(download_file(image))
-    sticker = Faraday::UploadIO.new(file[:names].last, 'webp')
+    sticker = Faraday::UploadIO.new(file[:names].last, "webp")
     send_sticker(sticker)
     FileUtils.rm_rf(file[:names])
   end
@@ -67,15 +70,16 @@ class BkkeBot < GPTBot
     flip_sticker = lambda do
       return if @msg.sticker.is_video
       return if @msg.sticker.is_animated # ? fix for TGS?
+
       send_chat_action(:choose_sticker)
       sleep 0.5
 
       file = download_file(@msg.sticker)
 
       original = file.original_filename
-      flopped = "flopped_" + original
+      flopped = "flopped_#{original}"
       `convert ./#{original} -flop ./#{flopped}`
-      sticker = Faraday::UploadIO.new(flopped, original.split('.').last)
+      sticker = Faraday::UploadIO.new(flopped, original.split(".").last)
       send_sticker(sticker)
     ensure
       FileUtils.rm_rf([original, flopped]) if file
@@ -87,9 +91,9 @@ class BkkeBot < GPTBot
       # Берём название стикерпака
       sticker_pack_name = @msg.sticker.set_name
       # Получаем массив стикеров из него
-      stickers = @api.get_sticker_set(name: sticker_pack_name)['result']['stickers']
+      stickers = @api.get_sticker_set(name: sticker_pack_name)["result"]["stickers"]
       # Берём рандомный стикер оттуда и его file_id
-      random_sticker_id = stickers.sample['file_id']
+      random_sticker_id = stickers.sample["file_id"]
       # Отправляем
       send_sticker(random_sticker_id)
     end
@@ -114,7 +118,7 @@ class BkkeBot < GPTBot
     jpg = file.original_filename
     webp = jpg.sub(/\..*/, ".webp")
     `convert -resize 512x512 #{jpg} #{webp}`
-    { names: [jpg, webp]}
+    { names: [jpg, webp] }
   end
 
   def pry

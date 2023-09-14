@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Whisper
   def transcribe
     attempt(3) do
@@ -9,6 +11,7 @@ module Whisper
         end
 
       return unless voice
+
       send_chat_action(:typing)
 
       file = ogg_to_mp3(download_file(voice))

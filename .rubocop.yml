@@ -1,0 +1,61 @@
+require: rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 3.2.2
+  NewCops: enable
+  Exclude:
+   - test.rb
+
+Layout/LineLength:
+  Max: 100
+
+Layout/SpaceAroundEqualsInParameterDefault:
+  EnforcedStyle: no_space
+
+Layout/SpaceInsideBlockBraces:
+  EnforcedStyleForEmptyBraces: space
+
+Lint/EmptyBlock:
+  Exclude:
+   - spec/rubydium/mixins/command_macros_spec.rb
+
+Metrics/BlockLength:
+  Exclude:
+   - spec/**/*
+
+Metrics/MethodLength:
+  CountAsOne:
+   - array
+   - heredoc
+   - method_call
+   - hash
+
+RSpec/BeNil:
+  EnforcedStyle: be
+
+RSpec/ExampleLength:
+  Max: 10
+
+RSpec/HookArgument:
+  EnforcedStyle: example
+
+RSpec/MessageSpies:
+  EnforcedStyle: receive
+
+RSpec/MultipleExpectations:
+  Max: 5
+
+Style/BlockDelimiters:
+  EnforcedStyle: braces_for_chaining
+
+Style/Documentation:
+  Enabled: false
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes

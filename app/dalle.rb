@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Dalle
   def dalle
     attempt(3) do

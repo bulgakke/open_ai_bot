@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 module Insults
-  ALLOW_INSULTS_CHATS = [-1001248912877, -1001568245078]
+  ALLOW_INSULTS_CHATS = [-1_001_248_912_877, -1_001_568_245_078].freeze
 
   def add_insults?(text)
     return false unless ALLOW_INSULTS_CHATS.include? @chat.id
@@ -92,8 +94,8 @@ module Insults
   end
 
   def add_insults(text)
-    sentences = text.split(/\. /).map { _1.sub(/\.?\z/, '. ') }
-    insults = get_insults(sentences.count).map { _1.match?(/(!|\.|\?) ?/) ? _1 + ' ' : _1 + '. ' }
+    sentences = text.split(". ").map { _1.sub(/\.?\z/, ". ") }
+    insults = get_insults(sentences.count).map { _1.match?(/(!|\.|\?) ?/) ? "#{_1} " : "#{_1}. " }
     sentences.zip(insults).join
   end
 end
