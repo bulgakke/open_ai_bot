@@ -1,21 +1,3 @@
-require "openai"
-require 'pry'
-require_relative "../rubydium/lib/rubydium"
-require_relative 'chat_thread'
-require_relative 'prob'
-require 'json'
-require 'open-uri'
-require "down"
-require 'nokogiri'
-require 'http'
-require 'securerandom'
-
-require_relative "chat_gpt"
-require_relative "dalle"
-require_relative "insults"
-require_relative "utils"
-require_relative "whisper"
-
 class GPTBot < Rubydium::Bot
   include ChatGPT
   include Dalle
@@ -133,8 +115,8 @@ class GPTBot < Rubydium::Bot
     end
 
     Probably do
-      with 1, &flip_sticker
-      # with 0.5, &random_sticker
+      with 0.05, &flip_sticker
+      with 0.05, &random_sticker
     end
   end
 
