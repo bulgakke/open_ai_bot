@@ -9,11 +9,13 @@ class GPTBot < Rubydium::Bot
   on_every_message :handle_gpt_command
   on_every_message :transcribe
   on_every_message :rust
-  on_command "/start", :init_session
+
+  on_command "/start", :init_session, description: "Resets ChatGPT session"
   on_command "/dalle", :dalle, description: "Sends the prompt to DALL-E"
-  on_command "/transcribe", :transcribe
-  on_command "/chat_id" do
-    reply_code(@chat.id)
+  on_command "/transcribe", :transcribe, description: "Reply to a voice message to transcribe it"
+
+  on_command "/help", description: "Sends useful help info"  do
+    reply(help_message)
   end
 
   def donate_message

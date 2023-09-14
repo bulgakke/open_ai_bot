@@ -66,7 +66,7 @@ GEM
       faraday (>= 1)
       faraday-multipart (>= 1)
     ruby2_keywords (0.0.5)
-    rubydium (0.2.2)
+    rubydium (0.2.3)
       async (~> 2.3)
       telegram-bot-ruby (~> 0.23.0)
     telegram-bot-ruby (0.23.0)
@@ -93,7 +93,7 @@ DEPENDENCIES
   nokogiri (~> 1.15)
   pry (~> 0.14.2)
   ruby-openai (~> 5.1)
-  rubydium (>= 0.2.2)
+  rubydium (>= 0.2.3)
 
 BUNDLED WITH
    2.4.15

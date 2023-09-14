@@ -41,6 +41,7 @@ bot.configure do |config|
 end
 
 if __FILE__ == $PROGRAM_NAME
-  puts "Launching #{bot}"
+  command_list = bot.help_message.lines.map { _1.delete_prefix("/") }.join
+  puts "Launching #{bot}. Command list: \n\n#{command_list}\n"
   bot.run
 end
