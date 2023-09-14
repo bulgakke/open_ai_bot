@@ -3,3 +3,7 @@ open_ai_token: sk-WWEt2TQQwRwT5Q6R11erE3TerrY65E2w4q5y1t4T2TwqYYyQ
 bot_username: chatgptbot
 owner_username: chatgptbotowner
 token: 1234567890:4yr1EWqT31_wERrwTYR1e_1t3_4wr5tWr3y
+chat_gpt_allow_all_private_chats: true
+chat_gpt_allow_all_group_chats: false
+chat_gpt_whitelist:
+  - -1001568245078 # Neurostuff

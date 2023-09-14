@@ -23,10 +23,12 @@ echo 'ruby 3.2.2' > ~/.tool-versions
 2. Give them money
 3. Create new secret key
 4. Put it into config.yaml
-5. You can also put organizatino ID in there if you want (uncomment respective line in main.rb)
+5. You can also put organization ID in there if you want (uncomment respective line in main.rb)
 
-## Other
-Put @usernames of your bot and your main account into config.yaml
+## Other config
+Add @usernames of your bot and your main account
+Fill chat_gpt_whitelist with allowed group chat ids to your liking. Keep in mind group chat IDs are supposed to be negative. Or set allow_all_group_chats to true
+To learn a chat's id, send any message in that chat with your bot, it will reply with that chat's id if it isn't allowed.
 
 ## Install dependencies
 `bundle`

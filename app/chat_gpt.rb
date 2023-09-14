@@ -17,17 +17,6 @@ module ChatGPT
     base.extend ClassMethods
   end
 
-  CHAT_GPT_WHITELIST = [
-    -1_001_710_466_788, # Akaia General
-    -1_001_705_942_869, # Akaia Engineering
-    -895_036_447, # Akaia Art
-    -1_001_568_245_078, # Neurostuff
-    -1_001_248_912_877, # Cyberbar
-    -1_001_207_589_473, # olexander's something psychology
-    -1_001_531_033_112, # Gyumri
-    -992_131_988 # Asgard
-  ].freeze
-
   def init_session
     self.class.new_thread(@chat.id)
     @api.send_message(text: "Bot's context reset.\n\n#{donate_message}", chat_id: @chat.id,
@@ -51,13 +40,23 @@ module ChatGPT
     end
   end
 
+  def allowed_chat?
+    return true if @user.username == config.owner_username
+    return true if config.chat_gpt_allow_all_private_chats && @chat.id.positive?
+    return true if config.chat_gpt_allow_all_group_chats && @chat.id.negative?
+    return true if config.chat_gpt_whitelist.include?(@chat.id)
+
+    false
+  end
+
   def handle_gpt_command
     @text_without_bot_mentions.strip
     return if self.class.registered_commands.keys.any? { @text.match? Regexp.new(_1) }
     return unless bot_mentioned? || bot_replied_to? || private_chat?
 
-    if @chat.id.negative? && !CHAT_GPT_WHITELIST.include?(@chat.id)
-      return reply("This chat (#{@chat.id}) is not whitelisted for ChatGPT usage. Ask #{config.owner_username}.")
+    if !allowed_chat?
+      msg = "This chat (`#{@chat.id}`) is not whitelisted for ChatGPT usage. Ask @#{config.owner_username}."
+      reply(msg, parse_mode: "Markdown")
     end
 
     return if fuck_off_human
@@ -101,6 +100,7 @@ module ChatGPT
             raise Net::ReadTimeout, response["error"]["message"]
           else
             text = response.dig("choices", 0, "message", "content")
+            puts "#{Time.now.to_i} | Chat ID: #{@chat.id}, tokens used: #{response.dig("usage", "total_tokens")}"
 
             text = add_insults(text) if add_insults?(text)
             reply(text)
@@ -119,6 +119,10 @@ module ChatGPT
 
       status.stop
     end
+  end
+
+  def add_insults?(_)
+    false
   end
 
   def ask_gpt(_name, prompt, thread)
