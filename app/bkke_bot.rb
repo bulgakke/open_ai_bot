@@ -1,20 +1,10 @@
-class GPTBot < Rubydium::Bot
-  include ChatGPT
-  include Dalle
+class BkkeBot < GPTBot
   include Insults
-  include Utils
-  include Whisper
 
   on_every_message :react_to_sticker
-  on_every_message :handle_gpt_command
-  on_every_message :transcribe
   on_every_message :rust
-  on_command "/start", :init_session
   on_command "/pry", :pry, description: "Open a debug session (if you have access to the server :3)"
-  on_command "/dalle", :dalle, description: "Sends the prompt to DALL-E"
-  on_command "/transcribe", :transcribe
   on_command "/bash", :get_bash_quote
-  on_command "/duel", :duel
   on_command "/sticker", :convert_to_sticker
   on_command "/twit", :twit
 
@@ -69,16 +59,6 @@ class GPTBot < Rubydium::Bot
       BTC: `18nLReEDqtLp2wjHcc6RDw1KVVxvX8Jv2n`
       ETH: `0xA0632c02d89f5b4ac0b6ffc0DbEEDCf43f7599B5`
     MSG
-  end
-
-  def rust
-    if @msg.text&.match? /\brust!?\b/i
-      if rand < 0.4
-        send_chat_action(:upload_video)
-        video = Faraday::UploadIO.new("#{__dir__}/storage/rust.mp4", "mp4")
-        send_video(video)
-      end
-    end
   end
 
   def react_to_sticker
@@ -139,23 +119,5 @@ class GPTBot < Rubydium::Bot
 
   def pry
     binding.pry
-  end
-
-  private
-
-  def private_chat?
-    @chat.type == "private"
-  end
-
-  def bot_replied_to?
-    @target&.username == config.bot_username
-  end
-
-  def bot_mentioned?
-    @text.split(/\s/).first == "@#{config.bot_username}"
-  end
-
-  def open_ai
-    config.open_ai_client
   end
 end
