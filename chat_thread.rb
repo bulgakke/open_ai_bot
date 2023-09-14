@@ -1,39 +1,57 @@
 class ChatThread
-  def initialize(user)
-    @history = [{role: :system, content: default_instruction(user), message_id: -1, chat_id: -1}]
+  def initialize(chat)
+    @history = [
+      {
+        role: :system,
+        content: default_instruction,
+      },
+      {
+        role: :user,
+        content: first_user_message,
+      },
+      {
+        role: :assistant,
+        content: first_bot_message
+      }
+    ]
   end
 
   def history
     @history
   end
 
-  def history_for_api
-    @history.map { _1.except(:message_id, :chat_id) }
-  end
-
-  def add!(role, content, message_id, chat_id)
-    return if [role, content, message_id, chat_id].any? { _1 == nil || _1 == '' }
+  def add!(role, content)
+    return if [role, content].any? { _1 == nil || _1 == '' }
 
     @history.push({
-      role:, content:, message_id:, chat_id:
+      role:, content: content.gsub(/\\xD\d/, '')
     })
   end
 
-  def default_instruction(user)
-    name = "#{user.first_name} #{user.last_name} #{user.id}"
-
+  def first_bot_message
     <<~MSG
-      <#{name}>:
+      Good for you!
+    MSG
+  end
 
-      Ты в групповом чате.
+  def first_user_message
+    <<~MSG
+      <@tyradee>:
+
+      I drank some tea today.
+    MSG
+  end
+
+  def default_instruction
+    <<~MSG
+      Ты находишься в групповом чате. Здесь могут использоваться разные языки, так что отвечай на вопросы на том языке, на котором они заданы.
+
       Помимо текста сообщений, первой строчкой ты будешь получать имя пользователя, который отправил это сообщение.
       Пользователи могут просить обращаться к ним иначе, чем подписано сообщение.
 
-      Например, это сообщение будет подписано как "#{name}", но ты должен обращаться ко мне как "#{user.first_name}".
+      Тебе не нужно подписывать свои сообщения и без необходимости вставлять имена других пользователей.
 
-      Пользователи также могут обращаться к тебе на других языках, помимо русского.
-
-      В остальном веди себя так, как вёл бы себя в разговоре один-на-один, но учитывая индивидуальный контекст для каждого пользователя.
+      Если не до конца понимаешь, о чём вопрос - задавай уточняющий вопрос в ответ. Также изредка задавай общие вопросы для продвижения диалога.
     MSG
   end
 end
