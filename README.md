@@ -36,6 +36,17 @@ echo 'ruby 3.2.2' >> ~/.tool-versions
 - Fill open_ai.whitelist with allowed group chat ids to your liking. Keep in mind group chat IDs are supposed to be negative. Or set allow_all_group_chats to true
 - To learn a chat's id, send any message in that chat with your bot, it will reply with that chat's id if it isn't allowed.
 
+## Adding your own functionality
+
+1. Fork the repo and extend it:
+- Create a `MyCustomBot < OpenAIBot` class
+- Require the file in `main.rb` and add the class to the `bots` hash
+
+2. Require this project as a dependency:
+- Create a new Ruby project
+- In the Gemfile, add `gem "open_ai_bot"`
+- Inherit your bot class from `OpenAIBot`
+
 ## Run
 
 `ruby main.rb`

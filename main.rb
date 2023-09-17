@@ -8,14 +8,17 @@ require "rubydium"
 
 require_relative "app/open_ai_bot"
 require_relative "app/clean_bot"
+require_relative "app/my_custom_bot"
 
 bots = {
   "open_ai" => OpenAIBot,
-  "clean" => CleanBot
+  "clean" => CleanBot,
+  "my_custom_bot" => MyCustomBot,
+  "default" => OpenAIBot
 }
 
-bot_name = (ARGV & bots.keys).first
-bot = bots[bot_name] || OpenAIBot
+bot_name = (ARGV & bots.keys).first || "default"
+bot = bots[bot_name]
 
 bot.config = YAML.load_file("#{__dir__}/config.yaml")
 bot.configure do |config|

@@ -98,15 +98,23 @@ module ChatGPT
       if response["error"]
         error_text = "```#{response["error"]["message"]}```"
         error_text += "\n\nHint: send /restart command to reset the context." if error_text.match? "tokens"
-        reply(error_text.strip, parse_mode: "Markdown")
+        send_chat_gpt_error(error_text.strip)
       else
         text = response.dig("choices", 0, "message", "content")
         puts "#{Time.now.utc} | Chat ID: #{@chat.id}, tokens used: #{response.dig("usage", "total_tokens")}"
 
-        reply(text)
-        @thread.add!(:assistant, text)
+        send_chat_gpt_response(text)
       end
     end
+  end
+
+  def send_chat_gpt_error(text)
+    reply(text, parse_mode: "Markdown")
+  end
+
+  def send_chat_gpt_response(text)
+    reply(text)
+    @thread.add!(:assistant, text)
   end
 
   def add_name(name, text)

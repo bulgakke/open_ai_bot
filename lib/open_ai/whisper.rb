@@ -26,13 +26,21 @@ module Whisper
       response = send_whisper_request(file[:file])
 
       if response["error"]
-        reply_code(response["error"])
+        send_whisper_error(response["error"])
       else
-        reply(response["text"])
+        send_whisper_response(response["text"])
       end
     ensure
       FileUtils.rm_rf(file[:names]) if file
     end
+  end
+
+  def send_whisper_response(text)
+    reply(text)
+  end
+
+  def send_whisper_error
+    reply_code(text)
   end
 
   def ogg_to_mp3(file)
