@@ -1,8 +1,6 @@
-## Ruby
+# ChatGPT bot
 
-(`ruby -v` should return something, preferrably > 3.2)
-
-Example for Ubuntu, bash and asdf:
+## Dependencies
 
 ```bash
 sudo apt install autoconf patch build-essential rustc libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libgmp-dev libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev uuid-dev
@@ -10,6 +8,7 @@ git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.12.0
 echo '. "$HOME/.asdf/asdf.sh"' >> ~/.bashrc
 asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
 asdf install
+bundle
 ```
 
 ## Telegram Bot API token
@@ -21,7 +20,7 @@ asdf install
 
 ## OpenAI API token
 
-1. Go to https://platform.openai.com/account/api-keys
+1. Go to <https://platform.openai.com/account/api-keys>
 2. Give them money
 3. Create new secret key
 4. Put it into config.yaml
@@ -32,10 +31,6 @@ asdf install
 Add @usernames of your bot and your main account
 Fill chat_gpt_whitelist with allowed group chat ids to your liking. Keep in mind group chat IDs are supposed to be negative. Or set allow_all_group_chats to true
 To learn a chat's id, send any message in that chat with your bot, it will reply with that chat's id if it isn't allowed.
-
-## Install dependencies
-
-`bundle`
 
 ## Run
 
