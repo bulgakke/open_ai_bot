@@ -19,25 +19,8 @@ module ChatGPT
 
   def init_session
     self.class.new_thread(@chat.id)
-    @api.send_message(text: "Bot's context reset.\n\n#{donate_message}", chat_id: @chat.id,
+    @api.send_message(text: "My previous personality is gone. I guess, something went wrong? 🤔", chat_id: @chat.id,
                       parse_mode: "Markdown")
-  end
-
-  def fuck_off_human
-    Probably do
-      with 0.03 do
-        send_sticker(
-          "CAACAgUAAx0CXXmFVgACIIZkOKHFFBpJBJeyaImOWtBOtlvNnAACxA8AAnE13AITzx15XY4bCS8E",
-          action: 3,
-          reply_to_message_id: @msg.message_id
-        )
-        true
-      end
-
-      otherwise do
-        false
-      end
-    end
   end
 
   def allowed_chat?
@@ -55,11 +38,9 @@ module ChatGPT
     return unless bot_mentioned? || bot_replied_to? || private_chat?
 
     if !allowed_chat?
-      msg = "This chat (`#{@chat.id}`) is not whitelisted for ChatGPT usage. Ask @#{config.owner_username}."
+      msg = "I don't have any means to support this conversation, sorry."
       reply(msg, parse_mode: "Markdown")
     end
-
-    return if fuck_off_human
 
     text = @text_without_bot_mentions
     text = nil if text.gsub(/\s/, "").empty?
@@ -87,7 +68,7 @@ module ChatGPT
         attempt(3) do
           response = open_ai.chat(
             parameters: {
-              model: "gpt-3.5-turbo",
+              model: "gpt-4",
               messages: thread.history
             }
           )
@@ -96,13 +77,12 @@ module ChatGPT
 
           if response["error"]
             error_text = response["error"]["message"]
-            "#{error_text}\n\nHint: press /start to reset the context." if error_text.match? "tokens"
+            "#{error_text}\n\nHint: press /restart to reset the context." if error_text.match? "tokens"
             raise Net::ReadTimeout, response["error"]["message"]
           else
             text = response.dig("choices", 0, "message", "content")
             puts "#{Time.now.to_i} | Chat ID: #{@chat.id}, tokens used: #{response.dig("usage", "total_tokens")}"
 
-            text = add_insults(text) if add_insults?(text)
             reply(text)
             thread.add!(:assistant, text)
           end
@@ -119,10 +99,6 @@ module ChatGPT
 
       status.stop
     end
-  end
-
-  def add_insults?(_)
-    false
   end
 
   def ask_gpt(_name, prompt, thread)

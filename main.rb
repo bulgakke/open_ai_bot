@@ -15,7 +15,6 @@ require_relative "app/chat_gpt"
 require_relative "app/clean_bot"
 require_relative "app/chat_thread"
 require_relative "app/dalle"
-require_relative "app/insults"
 require_relative "app/utils"
 require_relative "app/whisper"
 require_relative "app/prob"
@@ -24,13 +23,13 @@ require_relative "app/gpt_bot"
 require_relative "app/bkke_bot"
 
 bots = {
-  "bkkebot" => BkkeBot,
+  "airina_akaia_neurobot" => AirinaAkaiaNeurobot,
   "gptbot" => GPTBot,
   "clean" => CleanBot
 }
 
 bot_name = (ARGV & bots.keys).first
-bot = bots[bot_name] || BkkeBot
+bot = bots[bot_name] || AirinaAkaiaNeurobot
 
 bot.config = YAML.load_file("#{__dir__}/config.yaml")
 bot.configure do |config|

@@ -10,7 +10,7 @@ class GPTBot < Rubydium::Bot
   on_every_message :transcribe
   on_every_message :rust
 
-  on_command "/start", :init_session, description: "Resets ChatGPT session"
+  on_command "/restart", :init_session, description: "Resets ChatGPT session"
   on_command "/dalle", :dalle, description: "Sends the prompt to DALL-E"
   on_command "/transcribe", :transcribe, description: "Reply to a voice message to transcribe it"
 
@@ -26,7 +26,7 @@ class GPTBot < Rubydium::Bot
     return unless @msg.text&.match?(/\brust!?\b/i) && (rand < 0.4)
 
     send_chat_action(:upload_video)
-    video = Faraday::UploadIO.new("#{__dir__}/storage/rust.mp4", "mp4")
+    video = Faraday::UploadIO.new("#{__dir__}/asset/rust.mp4", "mp4")
     send_video(video)
   end
 
