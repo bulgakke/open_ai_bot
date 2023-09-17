@@ -1,5 +1,12 @@
 {
-	"ruby.rubocop.executePath": "",
+	"[ruby]": {
+		"editor.defaultFormatter": "Shopify.ruby-lsp",
+		"editor.formatOnType": true,
+		"editor.insertSpaces": true,
+		"files.trimTrailingWhitespace": true,
+		"files.insertFinalNewline": true,
+		"files.trimFinalNewlines": true
+	},
 	"cSpell.words": [
 		"newbot"
 	]
