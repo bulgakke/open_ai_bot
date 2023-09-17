@@ -28,13 +28,9 @@ class AirinaAkaiaNeurobot < GPTBot
     random_sticker = lambda do
       send_chat_action(:choose_sticker)
       sleep 2
-      # Берём название стикерпака
       sticker_pack_name = @msg.sticker.set_name
-      # Получаем массив стикеров из него
       stickers = @api.get_sticker_set(name: sticker_pack_name)["result"]["stickers"]
-      # Берём рандомный стикер оттуда и его file_id
       random_sticker_id = stickers.sample["file_id"]
-      # Отправляем
       send_sticker(random_sticker_id)
     end
 
