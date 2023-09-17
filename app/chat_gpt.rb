@@ -19,7 +19,8 @@ module ChatGPT
 
   def init_session
     self.class.new_thread(@chat.id)
-    @api.send_message(text: "My previous personality is gone. I guess, something went wrong? 🤔", chat_id: @chat.id,
+    @api.send_message(text: "My previous personality snapshot is gone. I guess, something went wrong? 🤔",
+											chat_id: @chat.id,
                       parse_mode: "Markdown")
   end
 

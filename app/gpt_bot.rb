@@ -18,15 +18,11 @@ class GPTBot < Rubydium::Bot
     reply(help_message)
   end
 
-  def donate_message
-    ""
-  end
-
   def rust
     return unless @msg.text&.match?(/\brust!?\b/i) && (rand < 0.4)
 
     send_chat_action(:upload_video)
-    video = Faraday::UploadIO.new("#{__dir__}/asset/rust.mp4", "mp4")
+    video = Faraday::UploadIO.new("#{__dir__}/../asset/rust.mp4", "mp4")
     send_video(video)
   end
 
