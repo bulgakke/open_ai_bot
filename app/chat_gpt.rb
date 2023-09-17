@@ -25,12 +25,10 @@ module ChatGPT
   end
 
   def allowed_chat?
-    puts @chat.id
-
     @user.username == config.owner_username ||
+      config.chat_gpt_whitelist.include?(@chat.id) ||
       config.chat_gpt_allow_all_private_chats && @chat.id.positive? ||
-      config.chat_gpt_allow_all_group_chats && @chat.id.negative? ||
-      config.chat_gpt_whitelist.include?(@chat.id)
+      config.chat_gpt_allow_all_group_chats && @chat.id.negative?
   end
 
   def handle_gpt_command
@@ -40,7 +38,7 @@ module ChatGPT
 
     if !allowed_chat?
       msg = "I don't have any means to support this conversation, sorry."
-      reply(msg, parse_mode: "Markdown")
+      return reply(msg, parse_mode: "Markdown")
     end
 
     text = @text_without_bot_mentions
