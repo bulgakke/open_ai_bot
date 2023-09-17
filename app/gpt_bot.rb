@@ -15,7 +15,7 @@ class GPTBot < Rubydium::Bot
   on_command "/transcribe", :transcribe, description: "Reply to a voice message to transcribe it"
 
   on_command "/help", description: "Sends useful help info" do
-    reply(help_message)
+    reply(self.class.help_message)
   end
 
   def rust
