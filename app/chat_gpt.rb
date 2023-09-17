@@ -25,12 +25,10 @@ module ChatGPT
   end
 
   def allowed_chat?
-    return true if @user.username == config.owner_username
-    return true if config.chat_gpt_allow_all_private_chats && @chat.id.positive?
-    return true if config.chat_gpt_allow_all_group_chats && @chat.id.negative?
-    return true if config.chat_gpt_whitelist.include?(@chat.id)
-
-    false
+    @user.username == config.owner_username
+			|| config.chat_gpt_allow_all_private_chats && @chat.id.positive?
+    	|| config.chat_gpt_allow_all_group_chats && @chat.id.negative?
+    	|| config.chat_gpt_whitelist.include?(@chat.id)
   end
 
   def handle_gpt_command
