@@ -25,6 +25,8 @@ module ChatGPT
   end
 
   def allowed_chat?
+    puts @chat.id
+
     @user.username == config.owner_username
 			|| config.chat_gpt_allow_all_private_chats && @chat.id.positive?
     	|| config.chat_gpt_allow_all_group_chats && @chat.id.negative?
