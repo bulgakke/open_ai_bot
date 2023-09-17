@@ -54,10 +54,10 @@ module ChatGPT
     if target_text && bot_mentioned?
       target_name = "@#{@replies_to.from.username}"
       text = [add_name(target_name, target_text), add_name(name, text)].join("\n\n")
-      ask_gpt(name, text, thread)
+      ask(name, text, thread)
     elsif text
       text = add_name(name, text)
-      ask_gpt(name, text, thread)
+      ask(name, text, thread)
     end
   end
 
@@ -100,7 +100,7 @@ module ChatGPT
     end
   end
 
-  def ask_gpt(_name, prompt, thread)
+  def ask(_name, prompt, thread)
     thread.add!(:user, prompt)
     send_request(thread)
   end
