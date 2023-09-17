@@ -34,4 +34,4 @@ To learn a chat's id, send any message in that chat with your bot, it will reply
 
 ## Run
 
-`ruby main.rb gptbot`
+`./main.rb`
