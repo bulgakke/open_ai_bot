@@ -21,7 +21,7 @@ require_relative "app/whisper"
 require_relative "app/prob"
 
 require_relative "app/gpt_bot"
-require_relative "app/bkke_bot"
+require_relative "app/airina_akaia_neurobot"
 
 bots = {
   "airina_akaia_neurobot" => AirinaAkaiaNeurobot,
