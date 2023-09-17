@@ -6,9 +6,9 @@ require "yaml"
 require "down"
 require "rubydium"
 
-require_relative "app/open_ai_bot"
-require_relative "app/clean_bot"
-require_relative "app/my_custom_bot"
+require_relative "lib/open_ai_bot"
+require_relative "lib/clean_bot"
+require_relative "lib/my_custom_bot"
 
 bots = {
   "open_ai" => OpenAIBot,
