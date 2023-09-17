@@ -15,6 +15,7 @@ module Dalle
       url = response.dig("data", 0, "url")
       puts response
       puts "DALL-E finished, sending photo to Telegram..."
+
       if response["error"]
         reply_code(response)
       else

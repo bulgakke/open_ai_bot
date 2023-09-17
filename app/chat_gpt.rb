@@ -77,7 +77,7 @@ module ChatGPT
 
           if response["error"]
             error_text = response["error"]["message"]
-            "#{error_text}\n\nHint: press /restart to reset the context." if error_text.match? "tokens"
+            "#{error_text}\n\nHint: send /restart command to reset the context." if error_text.match? "tokens"
             raise Net::ReadTimeout, response["error"]["message"]
           else
             text = response.dig("choices", 0, "message", "content")
@@ -92,18 +92,17 @@ module ChatGPT
       status = task.async do
         loop do
           send_chat_action(:typing)
-          sleep 4.5
+          sleep 3
         end
       end
-      request.wait
 
+      request.wait
       status.stop
     end
   end
 
   def ask_gpt(_name, prompt, thread)
     thread.add!(:user, prompt)
-
     send_request(thread)
   end
 

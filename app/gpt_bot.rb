@@ -14,7 +14,7 @@ class GPTBot < Rubydium::Bot
   on_command "/dalle", :dalle, description: "Sends the prompt to DALL-E"
   on_command "/transcribe", :transcribe, description: "Reply to a voice message to transcribe it"
 
-  on_command "/help", description: "Sends useful help info"  do
+  on_command "/help", description: "Sends useful help info" do
     reply(help_message)
   end
 
