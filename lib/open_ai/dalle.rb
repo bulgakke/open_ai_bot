@@ -2,13 +2,7 @@
 
 module Dalle
   def dalle
-    if !allowed_chat?
-      if chat_not_allowed_message
-        return reply(chat_not_allowed_message, parse_mode: "Markdown")
-      else
-        return
-      end
-    end
+    return unless allowed_chat?
 
     attempt(3) do
       puts "Received a /dalle command"

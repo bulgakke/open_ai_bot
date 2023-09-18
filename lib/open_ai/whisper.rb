@@ -3,11 +3,11 @@
 module Whisper
   def transcribe
     if !allowed_chat?
-      if chat_not_allowed_message
-        return reply(chat_not_allowed_message, parse_mode: "Markdown")
-      else
-        return
+      if @command == "/transcribe"
+        reply(chat_not_allowed_message) if chat_not_allowed_message
       end
+
+      return
     end
 
     attempt(3) do
