@@ -1,4 +1,11 @@
 # OpenAI Telegram bot
+## What it does
+- ChatGPT
+  Send any message to the bot, or ping its @username or reply ot its message in a group chat. It will forward your message to ChatGPT and return a response, keeping track of context.
+- Whisper
+  Record a voice message in any chat with the bot or reply to a forwarded message with the `/transcribe` command. It will reply with a transcript, automatically detecting language(s).
+- DALL-e
+  Send `/dalle {prompt/description}` command. The bot will reply with a picture based on your prompt.
 
 ## Dependencies
 1. Ruby (`ruby -v` should return something, preferrably > 3.2)
