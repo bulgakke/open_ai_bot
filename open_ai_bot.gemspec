@@ -5,7 +5,7 @@ require_relative "lib/open_ai_bot"
 
 Gem::Specification.new do |spec|
   spec.name          = "open_ai_bot"
-  spec.version       = "0.2.2"
+  spec.version       = "0.2.3"
   spec.authors       = ["bulgakke"]
   spec.email         = ["vvp835@yandex.ru"]
 
