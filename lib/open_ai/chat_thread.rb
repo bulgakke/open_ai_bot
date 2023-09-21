@@ -3,17 +3,24 @@
 module OpenAI
   class ChatThread
     def initialize(defaults = [])
-      @history = defaults
+      @history ||= defaults
       puts @history
     end
 
     attr_reader :history
 
-    def add!(role, content)
-      return if [role, content].any? { [nil, ""].include?(_1) }
+    def add(message)
+      return false unless message&.valid?
+      return false if @history.any? { message.id == _1.id}
 
-      puts content
-      @history.push({ role: role, content: content.gsub(/\\xD\d/, "") })
+      @history << message
+      puts message
+
+      true
+    end
+
+    def as_json
+      @history.map(&:as_json)
     end
   end
 end

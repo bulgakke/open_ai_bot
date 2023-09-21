@@ -13,31 +13,38 @@ module OpenAI
       end
 
       def default_instruction
-        <<~MSG
+        msg = <<~MSG
           You are in a group chat. In the first line of the message, you will receive the name of the user who sent that message.
+          Do not sign your messages this way
+          Do not use users' names without need (for example, if you are replying to @foo, do not add "@foo" to your message)
+          You can still use names to mention other users you're not replying to directly.
+
           Different languages can be used.
-          You don't have to sign your messages this way or use users' names without need.
         MSG
+
+        SystemMessage.new(
+          body: msg
+        )
       end
 
       def first_user_message
-        <<~MSG
-          <@tyradee>:
-          I drank some tea today.
-        MSG
+        Message.new(
+          from: "@tyradee",
+          body: "I drank some tea today."
+        )
       end
 
       def first_bot_message
-        <<~MSG
-          Good for you!
-        MSG
+        BotMessage.new(
+          body: "Good for you!"
+        )
       end
 
       def initial_messages
         [
-          { role: :system, content: default_instruction },
-          { role: :user, content: first_user_message },
-          { role: :assistant, content: first_bot_message }
+          default_instruction,
+          first_user_message,
+          first_bot_message
         ]
       end
     end
@@ -51,61 +58,75 @@ module OpenAI
       send_message(session_restart_message)
     end
 
+    def current_thread
+      self.class.threads[@chat.id] || self.class.new_thread(@chat.id)
+    end
+
+    def username(user)
+      return unless user
+      return "@" + user.username if user.username.present?
+      return user.first_name if user.first_name.present?
+
+      "NULL"
+    end
+
     def handle_gpt_command
       return unless bot_mentioned? || bot_replied_to? || private_chat?
-      return if self.class.registered_commands.keys.any? { @text.match? Regexp.new(_1) }
+      return if self.class.registered_commands.keys.any? { @text.include? _1 }
 
       if !allowed_chat?
         reply(chat_not_allowed_message, parse_mode: "Markdown") if chat_not_allowed_message
         return
       end
 
-      # Find the ChatThread current message belongs to (or create a fresh new one)
-      @thread = self.class.threads[@chat.id] || self.class.new_thread(@chat.id)
+      current_message = Message.new(
+        id: @message_id,
+        replies_to: @replies_to&.message_id,
+        from: username(@user),
+        body: @text_without_bot_mentions,
+        chat_id: @chat.id
+      )
 
-      # `text` is whatever the current user wrote, except the bot username (unless it's only whitespace)
-      text = @text_without_bot_mentions
-      text = nil if text.gsub(/\s/, "").empty?
+      return unless current_message.valid?
 
-      # `target_text` is the text of the message current user replies to
-      target_text = @replies_to&.text || @replies_to&.caption
-      target_text = nil if @target&.username == config.bot_username
+      replies_to =
+        if @replies_to && !bot_replied_to?
+          Message.new(
+            id: @replies_to.message_id,
+            replies_to: @replies_to.reply_to_message&.message_id,
+            from: username(@target),
+            body: @replies_to.text.to_s.gsub(/@#{config.bot_username}\b/, ""),
+            chat_id: @chat.id
+          )
+        else
+          nil
+        end
 
+      current_thread.add(replies_to)
+      current_thread.add(current_message)
 
-      name = "@#{@user.username}"
-      target_name = "@#{@replies_to&.from&.username}"
-
-      # If present, glue together current user text and reply target text, marking them with usernames
-      text = [
-        add_name(target_name, target_text),
-        add_name(name, text)
-      ].join("\n\n").strip
-
-      @thread.add!(:user, text)
-      send_request
+      send_request!
     end
 
-    def send_request
-      attempt(3) do
-        send_chat_action(:typing)
+    def send_request!
+      send_chat_action(:typing)
 
-        response = open_ai.chat(
-          parameters: {
-            model: config.open_ai["chat_gpt_model"],
-            messages: @thread.history
-          }
-        )
+      response = open_ai.chat(
+        parameters: {
+          model: config.open_ai["chat_gpt_model"],
+          messages: current_thread.as_json
+        }
+      )
 
-        if response["error"]
-          error_text = "```#{response["error"]["message"]}```"
-          error_text += "\n\nHint: send /restart command to reset the context." if error_text.match? "tokens"
-          send_chat_gpt_error(error_text.strip)
-        else
-          text = response.dig("choices", 0, "message", "content")
-          puts "#{Time.now.utc} | Chat ID: #{@chat.id}, tokens used: #{response.dig("usage", "total_tokens")}"
+      if response["error"]
+        error_text = "```#{response["error"]["message"]}```"
+        error_text += "\n\nHint: send /restart command to reset the context." if error_text.match? "tokens"
+        send_chat_gpt_error(error_text.strip)
+      else
+        text = response.dig("choices", 0, "message", "content")
+        tokens = response.dig("usage", "total_tokens")
 
-          send_chat_gpt_response(text)
-        end
+        send_chat_gpt_response(text, tokens)
       end
     end
 
@@ -113,15 +134,16 @@ module OpenAI
       reply(text, parse_mode: "Markdown")
     end
 
-    def send_chat_gpt_response(text)
-      reply(text)
-      @thread.add!(:assistant, text)
-    end
-
-    def add_name(name, text)
-      return "" if text.nil? || text.empty?
-
-      "<#{name}>:\n#{text}"
+    def send_chat_gpt_response(text, tokens)
+      id = reply(text).dig("result", "message_id")
+      bot_message = BotMessage.new(
+        id: id,
+        replies_to: @message_id,
+        body: text,
+        chat_id: @chat.id,
+        tokens: tokens
+      )
+      current_thread.add(bot_message)
     end
   end
 end
