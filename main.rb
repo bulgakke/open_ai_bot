@@ -6,9 +6,6 @@ require "yaml"
 require "down"
 require "rubydium"
 
-require_relative "lib/ext/blank"
-require_relative "lib/ext/in"
-
 require_relative "lib/open_ai_bot"
 require_relative "lib/clean_bot"
 require_relative "lib/my_custom_bot"
