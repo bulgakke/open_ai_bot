@@ -2,6 +2,7 @@
 
 require_relative "open_ai/chat_gpt"
 require_relative "open_ai/chat_thread"
+require_relative "open_ai/message"
 require_relative "open_ai/dalle"
 require_relative "open_ai/utils"
 require_relative "open_ai/whisper"
