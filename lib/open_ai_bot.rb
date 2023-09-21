@@ -7,10 +7,10 @@ require_relative "open_ai/utils"
 require_relative "open_ai/whisper"
 
 class OpenAIBot < Rubydium::Bot
-  include ChatGPT
-  include Dalle
-  include Utils
-  include Whisper
+  include OpenAI::ChatGPT
+  include OpenAI::Dalle
+  include OpenAI::Utils
+  include OpenAI::Whisper
 
   on_every_message :handle_gpt_command
   on_every_message :transcribe
