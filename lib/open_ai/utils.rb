@@ -14,13 +14,16 @@ module OpenAI
       end
     end
 
-    def download_file(voice)
+    def download_file(voice, dir=nil)
       file_path = @api.get_file(file_id: voice.file_id)["result"]["file_path"]
 
       url = "https://api.telegram.org/file/bot#{config.token}/#{file_path}"
 
       file = Down.download(url)
-      FileUtils.mv(file.path, "./#{file.original_filename}")
+      dir ||= "."
+
+      FileUtils.mkdir(dir) unless Dir.exist? dir
+      FileUtils.mv(file.path, "#{dir.delete_suffix("/")}/#{file.original_filename}")
       file
     end
   end
