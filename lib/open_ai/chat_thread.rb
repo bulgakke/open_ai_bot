@@ -22,5 +22,9 @@ module OpenAI
     def as_json
       @history.map(&:as_json)
     end
+
+    def for_logs
+      @history.map(&:for_logs)
+    end
   end
 end

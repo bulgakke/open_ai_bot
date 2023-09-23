@@ -4,11 +4,12 @@ module OpenAI
 
   class Message
     attr_accessor :body, :from, :id, :replies_to, :tokens, :chat_id
-    attr_reader :role
+    attr_reader :role, :timestamp
 
     def initialize(**kwargs)
       kwargs.each_pair { public_send("#{_1}=", _2) }
       @role = :user
+      @timestamp = Time.now.to_i
     end
 
     def valid?
@@ -17,8 +18,13 @@ module OpenAI
 
     # Format for OpenAI API
     def as_json
-      content = [from, body].join("\n")
+      content = [from, body].compact.join("\n")
       { role:, content: content }
+    end
+
+    # Format for machine-readable logs
+    def for_logs
+      { role:, body:, from:, id:, replies_to:, tokens:, chat_id:, timestamp: }
     end
 
     # Format for human-readable logs
