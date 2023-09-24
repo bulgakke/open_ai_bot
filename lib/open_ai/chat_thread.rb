@@ -9,6 +9,15 @@ module OpenAI
 
     attr_reader :history
 
+    alias_method :messages, :history
+
+    def delete(id)
+      return false unless id
+
+      @history.delete_if { _1.id == id }
+      true
+    end
+
     def add(message)
       return false unless message&.valid?
       return false if @history.any? { message.id == _1.id}
