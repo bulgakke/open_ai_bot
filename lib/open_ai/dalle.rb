@@ -2,12 +2,12 @@
 
 module OpenAI
   module Dalle
-    def dalle
+    def dalle(prompt = nil)
       return unless allowed_chat?
 
       attempt(3) do
         puts "Received a /dalle command"
-        prompt = @replies_to&.text || @text_without_command
+        prompt ||= @replies_to&.text || @text_without_command
         send_chat_action(:upload_photo)
 
         puts "Sending request"
