@@ -7,8 +7,9 @@ module OpenAI
         @threads ||= {}
       end
 
-      def new_thread(chat_id)
-        new_thread = ChatThread.new(initial_messages)
+      def new_thread(chat_id, model = nil)
+        msgs = config.open_at.whitelist.include?(chat_id) ? initial_messages :
+        new_thread = ChatThread.new(msgs, model)
         threads[chat_id] = new_thread
       end
 
@@ -49,12 +50,13 @@ module OpenAI
       end
     end
 
+
     def self.included(base)
       base.extend ClassMethods
     end
 
     def init_session
-      self.class.new_thread(@chat.id)
+      self.class.new_thread(@chat.id, model)
       send_message(session_restart_message)
     end
 
@@ -113,7 +115,7 @@ module OpenAI
 
       response = open_ai.chat(
         parameters: {
-          model: config.open_ai["chat_gpt_model"],
+          model: current_thread.model || config.open_ai["chat_gpt_model"],
           messages: current_thread.as_json
         }
       )

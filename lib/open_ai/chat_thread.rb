@@ -2,12 +2,14 @@
 
 module OpenAI
   class ChatThread
-    def initialize(defaults = [])
+    def initialize(defaults = [], model = nil)
       @history ||= defaults
+      @model = model
       puts @history
     end
 
     attr_reader :history
+    attr_reader :model
 
     alias_method :messages, :history
 
