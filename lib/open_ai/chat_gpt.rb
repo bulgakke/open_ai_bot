@@ -56,7 +56,7 @@ module OpenAI
     end
 
     def init_session
-      self.class.new_thread(@chat.id, model)
+      self.class.new_thread(@chat.id)
       send_message(session_restart_message)
     end
 
