@@ -3,7 +3,7 @@ module OpenAI
   # (ChatGPT isn't brilliant at parsing JSON sructures without starting to reply in JSON, so most of it is useless)
 
   class Message
-    attr_accessor :body, :from, :id, :replies_to, :tokens, :chat_id
+    attr_accessor :body, :from, :id, :replies_to, :tokens, :chat_id, :base64_image
     attr_reader :role, :timestamp
 
     def initialize(**kwargs)
@@ -13,13 +13,24 @@ module OpenAI
     end
 
     def valid?
-      [body, from, id, chat_id].all?(&:present?)
+      [(base64_image || body), from, id, chat_id].all?(&:present?)
     end
 
     # Format for OpenAI API
     def as_json
-      content = [from, body].compact.join("\n")
-      { role:, content: content }
+      msg = [from, body].compact.join("\n")
+
+      if base64_image
+        {
+          role: role,
+          content: [
+            { type: "text", text: msg },
+            { type: "image_url", image_url: { url: "data:image/jpeg;base64,#{base64_image}" } }
+          ]
+        }
+      else
+        { role:, content: msg }
+      end
     end
 
     # Format for machine-readable logs
@@ -35,7 +46,8 @@ module OpenAI
         "From" => from,
         "To" => replies_to,
         "Body" => body,
-        "Tokens used" => tokens
+        "Tokens used" => tokens,
+        "Image" => (base64_image ? "Some image" : "None")
       }.reject { |_k, v|
         v.blank?
       }.map { |k, v|

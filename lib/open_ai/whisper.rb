@@ -40,7 +40,7 @@ module OpenAI
       reply(text)
     end
 
-    def send_whisper_error
+    def send_whisper_error(text)
       reply_code(text)
     end
 
