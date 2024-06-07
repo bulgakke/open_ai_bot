@@ -15,6 +15,8 @@ module OpenAI
     end
 
     def download_file(voice, dir=nil)
+      return unless voice
+
       file_path = @api.get_file(file_id: voice.file_id)["result"]["file_path"]
 
       url = "https://api.telegram.org/file/bot#{config.token}/#{file_path}"
