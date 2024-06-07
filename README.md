@@ -16,8 +16,8 @@ sudo apt install autoconf patch build-essential rustc libssl-dev libyaml-dev lib
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.1
 echo '. "$HOME/.asdf/asdf.sh"' >> ~/.bashrc
 asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
-asdf install ruby 3.2.2
-echo 'ruby 3.2.2' >> ~/.tool-versions
+asdf install ruby 3.3.2
+echo 'ruby 3.3.2' >> ~/.tool-versions
 ```
 
 2. `ffmpeg`
