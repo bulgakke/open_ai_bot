@@ -127,7 +127,7 @@ module OpenAI
 
       response = open_ai.chat(
         parameters: {
-          model: current_thread.model || config.open_ai["chat_gpt_model"],
+          model: current_thread.model.to_s,
           messages: current_thread.as_json
         }
       )

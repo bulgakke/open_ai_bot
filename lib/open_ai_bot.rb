@@ -6,6 +6,7 @@ require_relative "open_ai/message"
 require_relative "open_ai/dalle"
 require_relative "open_ai/utils"
 require_relative "open_ai/whisper"
+require_relative "open_ai/model"
 
 require_relative "ext/blank"
 require_relative "ext/in"
