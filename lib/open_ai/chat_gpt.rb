@@ -130,9 +130,10 @@ module OpenAI
         send_chat_gpt_error(error_text.strip)
       else
         text = response.dig("choices", 0, "message", "content")
-        tokens = response.dig("usage", "total_tokens")
 
-        send_chat_gpt_response(text, tokens)
+        tokens_info = get_tokens_info!(response)
+
+        send_chat_gpt_response(text, tokens_info)
       end
     end
 
@@ -140,15 +141,28 @@ module OpenAI
       reply(text, parse_mode: "Markdown")
     end
 
-    def send_chat_gpt_response(text, tokens)
-      id = reply(text).dig("result", "message_id")
+    def get_tokens_info!(response)
+      completion_tokens = response.dig("usage", "completion_tokens")
+      prompt_tokens = response.dig("usage", "prompt_tokens")
+      vision_tokens = current_thread.claim_vision_tokens!
+
+      result = current_thread.model.request_cost(completion_tokens:, prompt_tokens:, vision_tokens:, current_thread:)
+    end
+
+    def send_chat_gpt_response(text, tokens_info)
+      tokens_text = tokens_info[:info]
+
+      id = reply(text + tokens_text).dig("result", "message_id")
+
       bot_message = BotMessage.new(
         id: id,
         replies_to: @message_id,
         body: text,
         chat_id: @chat.id,
-        tokens: tokens
+        chat_thread: current_thread,
+        cost: tokens_info[:total]
       )
+
       current_thread.add(bot_message)
     end
   end
