@@ -5,6 +5,7 @@ require "openai"
 require "yaml"
 require "down"
 require "rubydium"
+require "base64"
 
 require_relative "lib/open_ai_bot"
 require_relative "lib/clean_bot"

@@ -72,16 +72,6 @@ module OpenAI
       "NULL"
     end
 
-    def base64(file)
-      return unless config.open_ai["chat_gpt_model"] == "gpt-4-vision-preview"
-      return unless file
-
-      f = download_file(file)
-      res = Base64.encode64(f.read)
-      FileUtils.rm_rf("./#{f.original_filename}")
-      res
-    end
-
     def handle_gpt_command
       return unless bot_mentioned? || bot_replied_to? || private_chat?
       return if self.class.registered_commands.keys.any? { @text.include? _1 }
@@ -97,7 +87,8 @@ module OpenAI
         from: username(@user),
         body: @text_without_bot_mentions,
         chat_id: @chat.id,
-        base64_image: base64(@msg.photo&.last)
+        chat_thread: current_thread,
+        image: Image.from_tg_photo(download_file(@msg.photo&.last), model: current_thread.model)
       )
 
       return unless current_message.valid?
@@ -110,7 +101,8 @@ module OpenAI
             from: username(@target),
             body: @replies_to.text.to_s.gsub(/@#{config.bot_username}\b/, ""),
             chat_id: @chat.id,
-            base64_image: base64(@replies_to.photo&.last)
+            chat_thread: current_thread,
+            image: Image.from_tg_photo(download_file(@replies_to.photo&.last), model: current_thread.model)
           )
         else
           nil

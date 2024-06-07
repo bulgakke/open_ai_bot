@@ -7,10 +7,10 @@ require_relative "open_ai/dalle"
 require_relative "open_ai/utils"
 require_relative "open_ai/whisper"
 require_relative "open_ai/model"
+require_relative "open_ai/image"
 
 require_relative "ext/blank"
 require_relative "ext/in"
-
 
 class OpenAIBot < Rubydium::Bot
   include OpenAI::ChatGPT
