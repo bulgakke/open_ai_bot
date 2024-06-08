@@ -10,17 +10,6 @@ module OpenAI
       kwargs.each_pair { public_send("#{_1}=", _2) }
       @role = :user
       @timestamp = Time.now.to_i
-      @vision_tokens_claimed = !image
-    end
-
-    def vision_tokens_claimed?
-      @vision_tokens_claimed
-    end
-
-    def claim_vision_tokens!
-      # binding.pry
-      @vision_tokens_claimed = true
-      image&.tokens
     end
 
     def valid?

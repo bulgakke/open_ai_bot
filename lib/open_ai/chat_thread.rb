@@ -24,10 +24,6 @@ module OpenAI
       @history.map(&:cost).compact.sum
     end
 
-    def claim_vision_tokens!
-      @history.reject(&:vision_tokens_claimed?).map(&:claim_vision_tokens!).compact.sum
-    end
-
     def add(message)
       return false unless message&.valid?
       return false if @history.any? { message.id == _1.id}

@@ -145,9 +145,8 @@ module OpenAI
     def get_tokens_info!(response)
       completion_tokens = response.dig("usage", "completion_tokens")
       prompt_tokens = response.dig("usage", "prompt_tokens")
-      vision_tokens = current_thread.claim_vision_tokens!
 
-      result = current_thread.model.request_cost(completion_tokens:, prompt_tokens:, vision_tokens:, current_thread:)
+      result = current_thread.model.request_cost(completion_tokens:, prompt_tokens:, current_thread:)
     end
 
     def send_chat_gpt_response(text, tokens_info)
