@@ -2,8 +2,7 @@
 
 module OpenAI
   class ChatThread
-    def initialize(defaults = [], model = nil)
-      model ||= OpenAIBot.config.open_ai["chat_gpt_model"].to_sym
+    def initialize(defaults = [], model)
       @history ||= defaults
       @model = model.is_a?(Model) ? model : Model.new(model)
       puts @history

@@ -8,6 +8,7 @@ module OpenAI
       end
 
       def new_thread(chat_id, model = nil)
+        model ||= config.open_ai["chat_gpt_model"].to_sym
         msgs = config.open_ai["whitelist"].include?(chat_id) ? initial_messages : []
         new_thread = ChatThread.new(msgs, model)
         threads[chat_id] = new_thread
