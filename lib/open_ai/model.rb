@@ -25,7 +25,9 @@ module OpenAI
     end
 
     def initialize(model)
-      raise ArgumentError.new("Unknown model: #{model}") unless MODEL_INFO[model]
+      if MODEL_INFO[model].nil?
+        raise ArgumentError.new("Unknown model: #{model.inspect}.")
+      end
 
       @model = model
     end
