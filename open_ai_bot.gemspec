@@ -8,7 +8,7 @@ require_relative "lib/ext/in"
 
 Gem::Specification.new do |spec|
   spec.name          = "open_ai_bot"
-  spec.version       = "0.3.5"
+  spec.version       = "0.3.6"
   spec.authors       = ["bulgakke"]
   spec.email         = ["vvp835@yandex.ru"]
 
@@ -42,7 +42,7 @@ Gem::Specification.new do |spec|
     "http" => ["~> 5.1"],
     "nokogiri" => ["~> 1.15"],
     "rubydium" => [">= 0.2.5"],
-    "ruby-openai" => ["~> 5.1"]
+    "ruby-openai" => ["~> 8.1"]
   }.each do |name, versions|
     spec.add_dependency(name, *versions)
   end
