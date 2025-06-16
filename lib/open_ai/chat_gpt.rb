@@ -145,8 +145,11 @@ module OpenAI
     def get_tokens_info!(response)
       completion_tokens = response.dig("usage", "completion_tokens")
       prompt_tokens = response.dig("usage", "prompt_tokens")
+      cached_prompt_tokens = response.dig("usage", "prompt_tokens_details", "cached_tokens")
 
-      result = current_thread.model.request_cost(completion_tokens:, prompt_tokens:, current_thread:)
+      current_thread.model.request_cost(
+        completion_tokens:, prompt_tokens:, cached_prompt_tokens:, current_thread:
+      )
     end
 
     def send_chat_gpt_response(text, tokens_info)

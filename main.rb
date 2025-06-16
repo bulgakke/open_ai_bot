@@ -24,7 +24,7 @@ bot = bots[bot_name]
 bot.config = YAML.load_file("#{__dir__}/config.yaml")
 bot.configure do |config|
   config.open_ai_client = OpenAI::Client.new(
-    access_token: config.open_ai_token
+    access_token: config.open_ai['token']
     # organization_id: config.open_ai_organization_id
   )
 end

@@ -27,6 +27,14 @@ class OpenAIBot < Rubydium::Bot
   on_command "/help", description: "Sends useful help info" do
     reply(self.class.help_message)
   end
+  on_command "/d" do
+    return unless @user.username == config.owner_username
+    return unless @target&.id.in? [config.bot_id, @user.id]
+
+    current_thread.delete(@replies_to.message_id)
+    safe_delete(@replies_to)
+    safe_delete(@msg)
+  end
 
   def allowed_chat?
     return true if @user.username == config.owner_username

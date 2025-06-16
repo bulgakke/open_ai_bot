@@ -35,26 +35,29 @@ GEM
       dry-inflector (~> 1.0)
       dry-logic (~> 1.4)
       zeitwerk (~> 2.6)
-    event_stream_parser (0.3.0)
-    faraday (2.9.1)
-      faraday-net_http (>= 2.0, < 3.2)
-    faraday-multipart (1.0.4)
-      multipart-post (~> 2)
-    faraday-net_http (3.1.0)
-      net-http
+    event_stream_parser (1.0.0)
+    faraday (2.13.1)
+      faraday-net_http (>= 2.0, < 3.5)
+      json
+      logger
+    faraday-multipart (1.1.0)
+      multipart-post (~> 2.0)
+    faraday-net_http (3.4.1)
+      net-http (>= 0.5.0)
     fiber-annotation (0.2.0)
     fiber-local (1.1.0)
       fiber-storage
     fiber-storage (0.1.1)
     ice_nine (0.11.2)
     io-event (1.6.0)
-    json (2.7.2)
+    json (2.12.2)
+    logger (1.7.0)
     multipart-post (2.4.1)
-    net-http (0.4.1)
+    net-http (0.6.0)
       uri
     public_suffix (5.0.5)
-    ruby-openai (5.2.0)
-      event_stream_parser (>= 0.3.0, < 1.0.0)
+    ruby-openai (8.1.0)
+      event_stream_parser (>= 0.3.0, < 2.0.0)
       faraday (>= 1)
       faraday-multipart (>= 1)
     rubydium (0.4.1)
@@ -65,7 +68,7 @@ GEM
       faraday (~> 2.0)
       faraday-multipart (~> 1.0)
       zeitwerk (~> 2.6)
-    uri (0.13.0)
+    uri (1.0.3)
     zeitwerk (2.6.15)
 
 PLATFORMS
@@ -74,7 +77,7 @@ PLATFORMS
 
 DEPENDENCIES
   down (~> 5.4)
-  ruby-openai (~> 5.1)
+  ruby-openai (~> 8.1)
   rubydium (>= 0.2.5)
 
 BUNDLED WITH

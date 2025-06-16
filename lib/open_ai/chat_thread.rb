@@ -5,6 +5,7 @@ module OpenAI
     def initialize(defaults = [], model)
       @history ||= defaults
       @model = model.is_a?(Model) ? model : Model.new(model)
+      puts "Using #{@model}"
       puts @history
     end
 
