@@ -65,9 +65,14 @@ module OpenAI
       end
 
       @model = model
+      puts "Using #{@model}"
     end
 
     def to_s
+      @model.to_s
+    end
+
+    def to_sym
       @model
     end
 

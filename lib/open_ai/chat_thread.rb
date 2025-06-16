@@ -5,12 +5,11 @@ module OpenAI
     def initialize(defaults = [], model)
       @history ||= defaults
       @model = model.is_a?(Model) ? model : Model.new(model)
-      puts "Using #{@model}"
       puts @history
     end
 
     attr_reader :history
-    attr_reader :model
+    attr_accessor :model
 
     alias_method :messages, :history
 

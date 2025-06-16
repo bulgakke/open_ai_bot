@@ -19,6 +19,7 @@ class OpenAIBot < Rubydium::Bot
   include OpenAI::Whisper
 
   on_every_message :handle_gpt_command
+  on_every_message :handle_model_query
   on_every_message :transcribe
 
   on_command "/restart", :init_session, description: "Resets ChatGPT session"
@@ -34,6 +35,39 @@ class OpenAIBot < Rubydium::Bot
     current_thread.delete(@replies_to.message_id)
     safe_delete(@replies_to)
     safe_delete(@msg)
+  end
+
+  on_command "/model" do
+    options = []
+    OpenAI::Model::MODEL_INFO.each do |model, info|
+      options << [
+        Telegram::Bot::Types::InlineKeyboardButton.new(
+          text: "#{model} - #{sprintf('%.2f', info[:output_price])}$",
+          callback_data: "/set #{model}"
+        )
+      ]
+    end
+    markup = Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: options)
+    reply("Select a model:", reply_markup: markup)
+  end
+
+  def handle_model_query
+    return unless @update.is_a? Telegram::Bot::Types::CallbackQuery
+    return unless @update.data.start_with? "/set "
+    return unless @user.username == config.owner_username
+
+    model = @update.data.delete_prefix("/set ").to_sym
+    return if OpenAI::Model::MODEL_INFO[model].nil?
+
+    text =
+      if current_thread.model.to_sym == model
+        "Already set to `#{model}`"
+      else
+        current_thread.model = OpenAI::Model.new(model)
+        "Was `#{current_thread.model.to_s}`, now `#{model}`"
+      end
+
+    reply(text, parse_mode: "Markdown")
   end
 
   def allowed_chat?
