@@ -5,7 +5,7 @@ module ConfigMenu
     base.on_every_message :handle_config_query
     base.on_command "/config" do
       $original_config_message_id = @message.id
-      $config_message_id = reply("clicky buttons:", reply_markup: config_menu).dig("result", "message_id")
+      $config_message_id = reply("clicky buttons:", reply_markup: config_menu).message_id
     end
   end
 

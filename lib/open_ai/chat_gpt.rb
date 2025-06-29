@@ -157,7 +157,7 @@ module OpenAI
       tokens_text = tokens_info[:info]
       tokens_text = '' if config.show_price_info == false
 
-      id = reply(text + tokens_text).dig("result", "message_id")
+      id = reply(text + tokens_text).message_id
 
       bot_message = BotMessage.new(
         id: id,
