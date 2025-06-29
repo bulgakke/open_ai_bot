@@ -8,7 +8,7 @@ require_relative "lib/ext/in"
 
 Gem::Specification.new do |spec|
   spec.name          = "open_ai_bot"
-  spec.version       = "0.3.6"
+  spec.version       = "0.3.7"
   spec.authors       = ["bulgakke"]
   spec.email         = ["vvp835@yandex.ru"]
 
